@@ -39,4 +39,6 @@ covid_data <- covid_data %>% inner_join(covid_data_copy)
 # Tidy demographic table as needed
 demographics <- demographics %>% pivot_wider(names_from = `Series Code`, values_from = YR2015)
 
-covid_data %>% inner_join(demographics, by=c(iso_code = "Country Code", location = "Country Name")) %>% View()
+# Unsure which join to use here ... 
+demographics %>% inner_join(covid_data, by=c("Country Code"="iso_code"))
+covid_data %>% inner_join(demographics, by=c(iso_code = "Country Code"))

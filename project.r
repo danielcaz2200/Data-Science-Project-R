@@ -36,6 +36,7 @@ covid_data_copy <- covid_data
 covid_data_copy <- covid_data_copy %>% mutate(date=as.Date(date)-14)
 covid_data_copy <- covid_data_copy %>%
   rename(new_deaths_smoothed_2wk = new_deaths_smoothed)
+covid_data_copy <- covid_data_copy %>% select(iso_code, date, new_deaths_smoothed_2wk)
 
 # Join original covid data with copy
 covid_data <- covid_data %>% inner_join(covid_data_copy)
@@ -48,3 +49,5 @@ demographics <- demographics %>%
 # demographics %>% inner_join(covid_data, by=c("Country Code"="iso_code"))
 covid_data <- covid_data %>% 
   inner_join(demographics, by=c("iso_code" = "Country Code"))
+
+

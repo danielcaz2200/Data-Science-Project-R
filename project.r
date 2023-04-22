@@ -59,13 +59,16 @@ covid_data <- covid_data %>%
 # PROJECT PART 2: LINEAR MODELING
 # -------------------------------
 
-# Generate at least 3 transformed vars
+# 2b. Generate at least 3 transformed vars
 
-# Description of variable transformations:
+# Description of variable and the R code transformations:
 
-
+# Cardiovascular deaths is the cardiovascular disease death rate times total population
 covid_data <- covid_data %>% mutate(cardiovasc_deaths = cardiovasc_death_rate * population)
 
+# This is the population density per square mile/km, this helps if there is a non-linear
+# relationship between population density and covid deaths
 covid_data <- covid_data %>% mutate(population_density_squared = population_density^2)
 
-covid_data <- covid_data %>% mutate(urban_pop_rate = SP.URB.TOTL/SP.POP.TOTL)
+# This is the rate of people living in urban areas, which is the urban pop total / pop total
+covid_data <- covid_data %>% mutate(urban_pop_rate = (SP.URB.TOTL/SP.POP.TOTL)*100)

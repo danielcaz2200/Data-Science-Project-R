@@ -1,6 +1,7 @@
 library(tidyverse)
 library(ggplot2)
 library(modelr)
+library(lubridate)
 
 # ------------------------------
 # PROJECT PART 1: DATA WRANGLING
@@ -72,3 +73,11 @@ covid_data <- covid_data %>% mutate(population_density_squared = population_dens
 
 # This is the rate of people living in urban areas, which is the urban pop total / pop total
 covid_data <- covid_data %>% mutate(urban_pop_rate = (SP.URB.TOTL/SP.POP.TOTL)*100)
+
+# Split data into train and test sets based on date
+train_data <- covid_data %>% filter(year(date) == 2022)
+test_data <- covid_data %>% filter(year(date) == 2023)
+
+# Check the number of rows in each subset
+nrow(train_data)
+nrow(test_data)

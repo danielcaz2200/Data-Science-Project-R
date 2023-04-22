@@ -3,7 +3,7 @@ library(ggplot2)
 library(modelr)
 
 # ------------------------------
-# PROJECT PART 1: DATA WRAGLING
+# PROJECT PART 1: DATA WRANGLING
 # ------------------------------
 
 # Read in both datasets
@@ -55,4 +55,17 @@ demographics <- demographics %>%
 covid_data <- covid_data %>% 
   inner_join(demographics, by=c("iso_code" = "Country Code"))
 
+# -------------------------------
+# PROJECT PART 2: LINEAR MODELING
+# -------------------------------
 
+# Generate at least 3 transformed vars
+
+# Description of variable transformations:
+
+
+covid_data <- covid_data %>% mutate(cardiovasc_deaths = cardiovasc_death_rate * population)
+
+covid_data <- covid_data %>% mutate(population_density_squared = population_density^2)
+
+covid_data <- covid_data %>% mutate(urban_pop_rate = SP.URB.TOTL/SP.POP.TOTL)

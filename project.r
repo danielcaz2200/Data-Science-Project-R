@@ -146,11 +146,11 @@ pred4 <- na.omit(pred4)
 pred5 <- na.omit(pred5)
 
 # Calculate RMSE for each model
-rmse1 <- rmse(pred1, test_data$new_deaths_smoothed_2wk)
-rmse2 <- rmse(pred2, test_data$new_deaths_smoothed_2wk)
-rmse3 <- rmse(pred3, test_data$new_deaths_smoothed_2wk)
-rmse4 <- rmse(pred4, test_data$new_deaths_smoothed_2wk)
-rmse5 <- rmse(pred5, test_data$new_deaths_smoothed_2wk)
+rmse1 <- rmse(actual=test_data$new_deaths_smoothed_2wk, predicted=pred1)
+rmse2 <- rmse(actual=test_data$new_deaths_smoothed_2wk, predicted=pred2)
+rmse3 <- rmse(actual=test_data$new_deaths_smoothed_2wk, predicted=pred3)
+rmse4 <- rmse(actual=test_data$new_deaths_smoothed_2wk, predicted=pred4)
+rmse5 <- rmse(actual=test_data$new_deaths_smoothed_2wk, predicted=pred5)
 
 # Print the RMSE for each model
 rmse1
@@ -158,3 +158,10 @@ rmse2
 rmse3
 rmse4
 rmse5
+
+rsme_by_country <- test_data %>% 
+  group_by(iso_code) %>% 
+  summarise(rmse_country = rmse(actual=cur_data()$new_deaths_smoothed_2wk, predicted=pred4))
+
+rsme_by_country
+

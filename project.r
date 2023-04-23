@@ -3,6 +3,7 @@ library(ggplot2)
 library(modelr)
 library(lubridate)
 library(Metrics)
+library(dplyr)
 
 # ------------------------------
 # PROJECT PART 1: DATA WRANGLING
@@ -63,10 +64,13 @@ covid_data <- covid_data %>%
 
 # most recently available new deaths per day two weeks ahead
 # 2023-03-15 is the last date before we get NAs
-# covid_data %>% select(new_deaths_smoothed_2wk, date) %>% arrange(desc(date)) %>% View()
-latest_date_new_d_smoothed <- covid_data %>% filter(!is.na(new_deaths_smoothed_2wk)) %>% tail(1) %>% select(date)
+# pull this date using pull()
+latest_date <- covid_data %>% 
+  filter(!is.na(new_deaths_smoothed_2wk)) %>% tail(1) %>% pull(date)
 
-recent_new_d_smoothed_2wk <- covid_data %>% group_by(iso_code) %>% filter(date == latest_date_new_d_smoothed$date)
+recent_new_d_smoothed_2wk <- covid_data %>% 
+  group_by(iso_code) %>% 
+  filter(date == latest_date)
 
 ggplot(data=recent_new_d_smoothed_2wk) + 
   geom_point(mapping=aes(x = new_cases_smoothed, y = new_deaths_smoothed_2wk))
@@ -74,7 +78,8 @@ ggplot(data=recent_new_d_smoothed_2wk) +
 # most recently available new deaths per day
 recent_new_d_smoothed <- covid_data %>% group_by(iso_code) %>% filter(date == max(date)) 
 
-ggplot(data=recent_new_d_smoothed) + geom_point(mapping=aes(x = SP.URB.TOTL, y = new_deaths_smoothed))
+ggplot(data=recent_new_d_smoothed) + 
+  geom_point(mapping=aes(x = SP.URB.TOTL, y = new_deaths_smoothed))
 
 # 2b. Generate at least 3 transformed vars
 
@@ -162,6 +167,3 @@ rmse5
 rsme_by_country <- test_data %>% 
   group_by(iso_code) %>% 
   summarise(rmse_country = rmse(actual=cur_data()$new_deaths_smoothed_2wk, predicted=pred4))
-
-rsme_by_country
-

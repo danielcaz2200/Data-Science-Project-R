@@ -85,23 +85,20 @@ nrow(train_data)
 nrow(test_data)
 
 # Run linear regression with at least 5 different combinations of predictor variables
-model1 <- lm(new_deaths_smoothed_2wk ~ new_cases_smoothed + gdp_per_capita +
-               diabetes_prevalence + icu_patients, data = train_data)
+model1 <- lm(data = train_data, formula = new_deaths_smoothed_2wk ~ new_cases_smoothed + gdp_per_capita +
+               diabetes_prevalence + icu_patients)
 
-model2 <- lm(new_deaths_smoothed_2wk ~ new_cases_smoothed + cardiovasc_deaths +
-               population_density_squared + hospital_beds_per_thousand, data = train_data)
+model2 <- lm(data = train_data, formula = new_deaths_smoothed_2wk ~ new_cases_smoothed + cardiovasc_deaths +
+               population_density_squared + hospital_beds_per_thousand)
 
-model3 <- lm(new_deaths_smoothed_2wk ~ new_cases_smoothed + urban_pop_rate +
-               human_development_index + hospital_beds_per_thousand,
-               data = train_data)
+model3 <- lm(data = train_data, formula = new_deaths_smoothed_2wk ~ new_cases_smoothed + urban_pop_rate +
+               human_development_index + hospital_beds_per_thousand)
 
-model4 <- lm(new_deaths_smoothed_2wk ~ new_cases_smoothed + life_expectancy +
-               gdp_per_capita + hospital_beds_per_thousand + human_development_index,
-               data = train_data)
+model4 <- lm(data = train_data, formula = new_deaths_smoothed_2wk ~ new_cases_smoothed + life_expectancy +
+               gdp_per_capita + hospital_beds_per_thousand + human_development_index)
 
-model5 <- lm(new_deaths_smoothed_2wk ~ new_cases_smoothed + total_vaccinations_per_hundred +
-               diabetes_prevalence + cardiovasc_deaths +
-               population_density_squared + urban_pop_rate, data = train_data)
+model5 <- lm(data = train_data, formula = new_deaths_smoothed_2wk ~ new_cases_smoothed + total_vaccinations_per_hundred + 
+                                                                       diabetes_prevalence + cardiovasc_deaths + population_density_squared + urban_pop_rate)
 
 # Print summary of each model to view coefficients and model statistics
 summary(model1)
@@ -109,3 +106,9 @@ summary(model2)
 summary(model3)
 summary(model4)
 summary(model5)
+
+pred1 <- predict(model1, newdata = test_data)
+pred2 <- predict(model2, newdata = test_data)
+pred3 <- predict(model3, newdata = test_data)
+pred4 <- predict(model4, newdata = test_data)
+pred5 <- predict(model5, newdata = test_data)

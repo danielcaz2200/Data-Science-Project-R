@@ -2,6 +2,7 @@ library(tidyverse)
 library(ggplot2)
 library(modelr)
 library(lubridate)
+library(Metrics)
 
 # ------------------------------
 # PROJECT PART 1: DATA WRANGLING
@@ -60,6 +61,21 @@ covid_data <- covid_data %>%
 # PROJECT PART 2: LINEAR MODELING
 # -------------------------------
 
+# most recently available new deaths per day two weeks ahead
+# 2023-03-15 is the last date before we get NAs
+# covid_data %>% select(new_deaths_smoothed_2wk, date) %>% arrange(desc(date)) %>% View()
+latest_date_new_d_smoothed <- covid_data %>% filter(!is.na(new_deaths_smoothed_2wk)) %>% tail(1) %>% select(date)
+
+recent_new_d_smoothed_2wk <- covid_data %>% group_by(iso_code) %>% filter(date == latest_date_new_d_smoothed$date)
+
+ggplot(data=recent_new_d_smoothed_2wk) + 
+  geom_point(mapping=aes(x = new_cases_smoothed, y = new_deaths_smoothed_2wk))
+
+# most recently available new deaths per day
+recent_new_d_smoothed <- covid_data %>% group_by(iso_code) %>% filter(date == max(date)) 
+
+ggplot(data=recent_new_d_smoothed) + geom_point(mapping=aes(x = SP.URB.TOTL, y = new_deaths_smoothed))
+
 # 2b. Generate at least 3 transformed vars
 
 # Description of variable and the R code transformations:
@@ -80,6 +96,9 @@ covid_data <- covid_data %>% mutate(urban_pop_rate = (SP.URB.TOTL/SP.POP.TOTL)*1
 train_data <- covid_data %>% filter(year(date) == 2022)
 test_data <- covid_data %>% filter(year(date) == 2023)
 
+# filter out rows where new_deaths_smoothed_2wk is NA
+test_data <- test_data %>% filter(!is.na(new_deaths_smoothed_2wk))
+
 # Check the number of rows in each subset
 nrow(train_data)
 nrow(test_data)
@@ -98,7 +117,7 @@ model4 <- lm(data = train_data, formula = new_deaths_smoothed_2wk ~ new_cases_sm
                gdp_per_capita + hospital_beds_per_thousand + human_development_index)
 
 model5 <- lm(data = train_data, formula = new_deaths_smoothed_2wk ~ new_cases_smoothed + total_vaccinations_per_hundred + 
-                                                                       diabetes_prevalence + cardiovasc_deaths + population_density_squared + urban_pop_rate)
+               diabetes_prevalence + cardiovasc_deaths + population_density_squared + urban_pop_rate)
 
 # Print summary of each model to view coefficients and model statistics
 summary(model1)
@@ -107,8 +126,35 @@ summary(model3)
 summary(model4)
 summary(model5)
 
-pred1 <- predict(model1, newdata = test_data)
-pred2 <- predict(model2, newdata = test_data)
-pred3 <- predict(model3, newdata = test_data)
-pred4 <- predict(model4, newdata = test_data)
-pred5 <- predict(model5, newdata = test_data)
+# ---------------------------------
+# PROJECT PART 2: EVALUATING MODELS
+# ---------------------------------
+
+# Removing NA values from new_deaths_smoothed_2wk column
+test_data <- test_data %>% filter(!is.na(new_deaths_smoothed_2wk))
+
+pred1 <- predict(model1, test_data)
+pred2 <- predict(model2, test_data)
+pred3 <- predict(model3, test_data)
+pred4 <- predict(model4, test_data)
+pred5 <- predict(model5, test_data)
+
+pred1 <- na.omit(pred1)
+pred2 <- na.omit(pred2)
+pred3 <- na.omit(pred3)
+pred4 <- na.omit(pred4)
+pred5 <- na.omit(pred5)
+
+# Calculate RMSE for each model
+rmse1 <- rmse(pred1, test_data$new_deaths_smoothed_2wk)
+rmse2 <- rmse(pred2, test_data$new_deaths_smoothed_2wk)
+rmse3 <- rmse(pred3, test_data$new_deaths_smoothed_2wk)
+rmse4 <- rmse(pred4, test_data$new_deaths_smoothed_2wk)
+rmse5 <- rmse(pred5, test_data$new_deaths_smoothed_2wk)
+
+# Print the RMSE for each model
+rmse1
+rmse2
+rmse3
+rmse4
+rmse5

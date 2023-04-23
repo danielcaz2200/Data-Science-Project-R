@@ -81,3 +81,8 @@ test_data <- covid_data %>% filter(year(date) == 2023)
 # Check the number of rows in each subset
 nrow(train_data)
 nrow(test_data)
+
+
+
+
+

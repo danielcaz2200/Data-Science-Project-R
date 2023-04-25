@@ -64,19 +64,15 @@ covid_data <- covid_data %>%
 
 # most recently available new deaths per day two weeks ahead
 # 2023-03-15 is the last date before we get NAs
-# pull this date using pull()
-latest_date <- covid_data %>% 
-  filter(!is.na(new_deaths_smoothed_2wk)) %>% tail(1) %>% pull(date)
-
 recent_new_d_smoothed_2wk <- covid_data %>% 
-  group_by(iso_code) %>% 
-  filter(date == latest_date)
+  filter(!is.na(new_deaths_smoothed_2wk)) %>% group_by(iso_code) %>% top_n(1, date)
 
 ggplot(data=recent_new_d_smoothed_2wk) + 
   geom_point(mapping=aes(x = new_cases_smoothed, y = new_deaths_smoothed_2wk))
 
 # most recently available new deaths per day
-recent_new_d_smoothed <- covid_data %>% group_by(iso_code) %>% filter(date == max(date)) 
+recent_new_d_smoothed <- covid_data %>% 
+  filter(!is.na(new_deaths_smoothed))%>% group_by(iso_code) %>% top_n(1, date)
 
 ggplot(data=recent_new_d_smoothed) + 
   geom_point(mapping=aes(x = SP.URB.TOTL, y = new_deaths_smoothed))

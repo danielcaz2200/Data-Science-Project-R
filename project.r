@@ -3,6 +3,8 @@ library(ggplot2)
 library(modelr)
 library(lubridate)
 library(dplyr)
+library(grid)
+library(gridExtra)
 
 # ------------------------------
 # PROJECT PART 1: DATA WRANGLING
@@ -128,6 +130,13 @@ summary(model3)
 summary(model4)
 summary(model5)
 
+# prepare data for tabulation
+r2_1 <- summary(model1)$adj.r.squared
+r2_2 <- summary(model2)$adj.r.squared
+r2_3 <- summary(model3)$adj.r.squared
+r2_4 <- summary(model4)$adj.r.squared
+r2_5 <- summary(model5)$adj.r.squared
+
 # ---------------------------------
 # PROJECT PART 3: EVALUATING MODELS
 # ---------------------------------
@@ -139,10 +148,16 @@ rmse_3 <- modelr::rmse(model=model3, data=test_data)
 rmse_4 <- modelr::rmse(model=model4, data=test_data)
 rmse_5 <- modelr::rmse(model=model5, data=test_data)
 
-# Create RMSE Table
+# Create RMSE and R2 Table
+r2_values <- c(r2_1, r2_2, r2_3, r2_4, r2_5)
+rmse_values <-  c(rmse_1, rmse_2, rmse_3, rmse_4, rmse_5)
+r2_rmse <- data.frame(r2_values, rmse_values)
+
+grid.newpage()
+grid.table(r2_rmse)
 
 # Note: NaN may happen bc certain parameters not feasible in certain countries
-rsme_by_country <- test_data %>% 
+rsme_by_country_top_20 <- test_data %>% 
   group_by(iso_code) %>% 
   summarise(rmse_country = modelr::rmse(data=cur_data(), model=model1)) %>% top_n(20)
 

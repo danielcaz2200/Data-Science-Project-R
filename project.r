@@ -134,11 +134,11 @@ summary(model5)
 # ---------------------------------
 
 # Calculating the Root Mean Squared Error (RMSE) over all days in 2023 and all countries
-modelr::rmse(model=model1, data=test_data)
-modelr::rmse(model=model2, data=test_data)
-modelr::rmse(model=model3, data=test_data)
-modelr::rmse(model=model4, data=test_data)
-modelr::rmse(model=model5, data=test_data)
+rmse_1 <- modelr::rmse(model=model1, data=test_data)
+rmse_2 <- modelr::rmse(model=model2, data=test_data)
+rmse_3 <- modelr::rmse(model=model3, data=test_data)
+rmse_4 <- modelr::rmse(model=model4, data=test_data)
+rmse_5 <- modelr::rmse(model=model5, data=test_data)
 
 # Create RMSE Table
 

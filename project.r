@@ -128,7 +128,7 @@ summary(model4)
 summary(model5)
 
 # ---------------------------------
-# PROJECT PART 2: EVALUATING MODELS
+# PROJECT PART 3: EVALUATING MODELS
 # ---------------------------------
 
 # Removing NA values from new_deaths_smoothed_2wk column

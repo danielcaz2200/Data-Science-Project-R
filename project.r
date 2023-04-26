@@ -2,7 +2,6 @@ library(tidyverse)
 library(ggplot2)
 library(modelr)
 library(lubridate)
-library(Metrics)
 library(dplyr)
 
 # ------------------------------

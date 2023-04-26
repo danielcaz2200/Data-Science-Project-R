@@ -58,6 +58,8 @@ demographics <- demographics %>%
 covid_data <- covid_data %>% 
   inner_join(demographics, by=c("iso_code" = "Country Code"))
 
+covid_data
+
 # -------------------------------
 # PROJECT PART 2: LINEAR MODELING
 # -------------------------------
@@ -131,35 +133,22 @@ summary(model5)
 # PROJECT PART 3: EVALUATING MODELS
 # ---------------------------------
 
-# Removing NA values from new_deaths_smoothed_2wk column
-test_data <- test_data %>% filter(!is.na(new_deaths_smoothed_2wk))
+# Calculating the Root Mean Squared Error (RMSE) over all days in 2023 and all countries
+modelr::rmse(model=model1, data=test_data)
+modelr::rmse(model=model2, data=test_data)
+modelr::rmse(model=model3, data=test_data)
+modelr::rmse(model=model4, data=test_data)
+modelr::rmse(model=model5, data=test_data)
 
-pred1 <- predict(model1, test_data)
-pred2 <- predict(model2, test_data)
-pred3 <- predict(model3, test_data)
-pred4 <- predict(model4, test_data)
-pred5 <- predict(model5, test_data)
+# Create RMSE Table
 
-pred1 <- na.omit(pred1)
-pred2 <- na.omit(pred2)
-pred3 <- na.omit(pred3)
-pred4 <- na.omit(pred4)
-pred5 <- na.omit(pred5)
-
-# Calculate RMSE for each model
-rmse1 <- rmse(actual=test_data$new_deaths_smoothed_2wk, predicted=pred1)
-rmse2 <- rmse(actual=test_data$new_deaths_smoothed_2wk, predicted=pred2)
-rmse3 <- rmse(actual=test_data$new_deaths_smoothed_2wk, predicted=pred3)
-rmse4 <- rmse(actual=test_data$new_deaths_smoothed_2wk, predicted=pred4)
-rmse5 <- rmse(actual=test_data$new_deaths_smoothed_2wk, predicted=pred5)
-
-# Print the RMSE for each model
-rmse1
-rmse2
-rmse3
-rmse4
-rmse5
-
+# Note: NaN may happen bc certain parameters not feasible in certain countries
 rsme_by_country <- test_data %>% 
   group_by(iso_code) %>% 
-  summarise(rmse_country = rmse(actual=cur_data()$new_deaths_smoothed_2wk, predicted=pred4))
+  summarise(rmse_country = modelr::rmse(data=cur_data(), model=model1)) %>% top_n(20)
+
+# View Best Model RMSE
+rsme_by_country_top_20
+
+# Create Best Model RMSE Table
+

@@ -81,7 +81,6 @@ ggplot(data=recent_new_d_smoothed) +
   geom_point(mapping=aes(x = SP.URB.TOTL, y = new_deaths_smoothed))
 
 # 2b. Generate at least 3 transformed vars
-
 # Description of variable and the R code transformations:
 
 # Cardiovascular deaths is the cardiovascular disease death rate times total population
@@ -165,4 +164,5 @@ rsme_by_country_top_20 <- test_data %>%
 rsme_by_country_top_20
 
 # Create Best Model RMSE Table
-
+grid.newpage()
+grid.table(rsme_by_country_top_20)

@@ -6,6 +6,8 @@ library(dplyr)
 library(grid)
 library(gridExtra)
 
+# Group member names: Daniel Cazarez, Taylor Noh
+
 # ------------------------------
 # PROJECT PART 1: DATA WRANGLING
 # ------------------------------

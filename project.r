@@ -158,13 +158,17 @@ grid.newpage()
 grid.table(r2_rmse)
 
 # Note: NaN may happen bc certain parameters not feasible in certain countries
-rsme_by_country_top_20 <- test_data %>% 
+rmse_by_country_top_20 <- test_data %>% 
   group_by(iso_code) %>% 
-  summarise(rmse_country = modelr::rmse(data=cur_data(), model=model1)) %>% top_n(20)
+  summarise(rmse_country = modelr::rmse(data=cur_data(), model=model1), 
+            population=mean(population)) %>%
+  arrange(-population) %>% 
+  filter(!is.na(rmse_country)) %>% 
+  select(-population)
 
 # View Best Model RMSE
-rsme_by_country_top_20
+rmse_by_country_top_20 <- rmse_by_country_top_20[1:20,]
 
 # Create Best Model RMSE Table
 grid.newpage()
-grid.table(rsme_by_country_top_20)
+grid.table(rmse_by_country_top_20)
